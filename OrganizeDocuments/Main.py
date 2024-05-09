@@ -33,7 +33,11 @@ root.title("Selecione a pasta que contem os documentos")
 label = tk.Label(root, text="Nenhuma pasta selecionada.")
 label.pack(pady=10)
 select_button = tk.Button(root, text="Seleciona a pasta", command=select_folder)
-select_button.pack(pady=5)
+select_button.pack(pady=130)
+
+window_width = 600
+window_height = 400
+root.geometry(f"{window_width}x{window_height}")
 
 root.mainloop()
 
@@ -55,7 +59,11 @@ root.title("Selecione a pasta para onde irão os documentos")
 label = tk.Label(root, text="Nenhuma pasta selecionada.")
 label.pack(pady=10)
 select_button = tk.Button(root, text="Seleciona a pasta", command=select_destination_folder)
-select_button.pack(pady=5)
+select_button.pack(pady=130)
+
+window_width = 600
+window_height = 400
+root.geometry(f"{window_width}x{window_height}")
 
 root.mainloop()
 
