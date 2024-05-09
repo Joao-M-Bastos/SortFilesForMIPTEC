@@ -15,6 +15,7 @@ import sys
 
 
 source_directory = 'C:/Documentos Para Organizar Miptec'
+destination_directory = 'C:/Documentos Organizados Miptec/'
 
 def select_folder():
     global source_directory
@@ -28,10 +29,10 @@ def select_folder():
 
 
 root = tk.Tk()
-root.title("Select Folder")
-label = tk.Label(root, text="No folder selected.")
+root.title("Selecione a pasta que contem os documentos")
+label = tk.Label(root, text="Nenhuma pasta selecionada.")
 label.pack(pady=10)
-select_button = tk.Button(root, text="Select Folder", command=select_folder)
+select_button = tk.Button(root, text="Seleciona a pasta", command=select_folder)
 select_button.pack(pady=5)
 
 root.mainloop()
@@ -39,15 +40,34 @@ root.mainloop()
 if(os.path.isdir(source_directory) is False):
     sys.exit()
 
+def select_destination_folder():
+    global destination_directory
 
+    folder_path = filedialog.askdirectory()
+    if folder_path:
+        destination_directory = folder_path
+        root.destroy()
+    else:
+        label.config(text="Nenhuma pasta selecionada.")
 
+root = tk.Tk()
+root.title("Selecione a pasta para onde irão os documentos")
+label = tk.Label(root, text="Nenhuma pasta selecionada.")
+label.pack(pady=10)
+select_button = tk.Button(root, text="Seleciona a pasta", command=select_destination_folder)
+select_button.pack(pady=5)
+
+root.mainloop()
+
+if(os.path.isdir(destination_directory) is False):
+    sys.exit()
 # Specify the path of the folder you want to create
-destination_directory = 'C:/Documentos Organizados Miptec/'
-surpassed_directory = 'C:/Documentos Organizados Miptec/Superados'
+
+destination_directory = destination_directory + '/Documentos Organizados'
+surpassed_directory = destination_directory + '/Superados'
 
 
 # Create the folder
-os.makedirs(destination_directory, exist_ok=True)
 os.makedirs(surpassed_directory, exist_ok=True)
 
 def CheckForSurpassedAndMoveDocument(file_name):
