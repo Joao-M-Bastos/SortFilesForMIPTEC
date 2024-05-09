@@ -1,9 +1,9 @@
 import os
 import shutil
-import time
 import tkinter as tk
 from tkinter import filedialog
 import sys
+import subprocess
 
 source_directory = 'C:/Documentos Para Organizar Miptec'
 destination_directory = 'C:/Documentos Organizados Miptec/'
@@ -78,7 +78,6 @@ if(os.path.isdir(destination_directory) is False):
     sys.exit()
 # Specify the path of the folder you want to create
 
-destination_directory = destination_directory + '/Documentos Organizados'
 surpassed_directory = destination_directory + '/Superados'
 
 
@@ -212,3 +211,10 @@ root.after(100, OrganizeItemsToDestinationScreen)
 root.mainloop()
 
 
+
+if os.path.exists(destination_directory):
+    print(destination_directory)
+    if os.name == 'nt':  # For Windows
+        subprocess.Popen(['explorer', os.path.normpath(destination_directory)])
+    elif os.name == 'posix':  # For macOS and Linux
+        subprocess.Popen(['xdg-open', os.path.normpath(destination_directory)])
