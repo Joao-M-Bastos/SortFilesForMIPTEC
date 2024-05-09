@@ -78,23 +78,42 @@ if(os.path.isdir(destination_directory) is False):
     sys.exit()
 # Specify the path of the folder you want to create
 
+destination_directory = destination_directory + '/Documentos Organizados'
 surpassed_directory = destination_directory + '/Superados'
-
+disordered_directory = destination_directory + '/Desordenado'
 
 # Create the folder
+os.makedirs(destination_directory, exist_ok=True)
 os.makedirs(surpassed_directory, exist_ok=True)
+os.makedirs(disordered_directory, exist_ok=True)
 
 def CheckForSurpassedAndMoveDocument(file_name):
     filename_without_extension, file_extension = os.path.splitext(file_name)
     last_digit = filename_without_extension[-1]
-    twolastDigits = filename_without_extension[-2] + filename_without_extension[-1]
+    twolastDigits = filename_without_extension[-2] + last_digit
+    threelastDigits = filename_without_extension[-2] + twolastDigits
+
+    irregular = False
+
     if twolastDigits.isdigit():
         last_digit = twolastDigits
-
-
+    #Documento com texto apos o nome
+    if threelastDigits.isalpha():
+        irregular = True
+    #Documento com parenteses no final
+    if not last_digit.isalnum():
+        irregular = True
+    #Documentos com data no final
+    if twolastDigits.isdigit() and not threelastDigits.isalnum():
+        irregular = True
 
     files = sorted(os.listdir(destination_directory), reverse=False)
-    if last_digit == twolastDigits:
+    if not irregular:
+        disordered_path = os.path.join(destination_directory, file_name)
+        disordered_destination_path = os.path.join(disordered_directory, file_name)
+        shutil.move(disordered_path, disordered_destination_path)
+        filtered_files = []
+    elif last_digit == twolastDigits:
         filtered_files = [file for file in files if file.startswith(filename_without_extension[:-2])]
     else:
         filtered_files = [file for file in files if file.startswith(filename_without_extension[:-1])]
@@ -102,16 +121,29 @@ def CheckForSurpassedAndMoveDocument(file_name):
     for file in filtered_files:
         newfilename_without_extension, newfile_extension = os.path.splitext(file)
         newlastdigit = newfilename_without_extension[-1]
-
+        newthreelastDigits = filename_without_extension[-2] + twolastDigits
         newtwolastDigits = newfilename_without_extension[-2] + newfilename_without_extension[-1]
+
+        irregular = False
+
+        # Documento com texto apos o nome
+        if newthreelastDigits.isalpha():
+            irregular = True
+        # Documento com parenteses no final
+        if not newlastdigit.isalnum():
+            irregular = True
+        # Documentos com data no final
+        if newtwolastDigits.isdigit() and not newthreelastDigits.isalnum():
+            irregular = True
+
         if newtwolastDigits.isdigit():
             newlastdigit = newtwolastDigits
 
-        if file_extension == newfile_extension and filename_without_extension != newfilename_without_extension:
+        if file_extension == newfile_extension and filename_without_extension != newfilename_without_extension and not irregular:
             if newlastdigit.isdigit() and last_digit.isdigit() and int(newlastdigit) < int(last_digit):
                 surpassed_path = os.path.join(destination_directory, file)
                 surpassed_destination_path = os.path.join(surpassed_directory, file)
-            elif newlastdigit.isdigit() is False and last_digit.isdigit() is False:
+            elif not newlastdigit.isdigit() and not last_digit.isdigit():
                 if newlastdigit < last_digit:
                     surpassed_path = os.path.join(destination_directory, file)
                     surpassed_destination_path = os.path.join(surpassed_directory, file)
@@ -120,7 +152,7 @@ def CheckForSurpassedAndMoveDocument(file_name):
                     surpassed_destination_path = os.path.join(surpassed_directory, file_name)
             else:
                 #manda o numerado para outra pasta
-                if newlastdigit.isdigit() is False and last_digit.isdigit():
+                if not newlastdigit.isdigit() and last_digit.isdigit():
                     surpassed_path = os.path.join(destination_directory, file)
                     surpassed_destination_path = os.path.join(surpassed_directory, file)
                 else:
