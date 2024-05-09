@@ -101,6 +101,8 @@ def CheckForSurpassedAndMoveDocument(file_name):
     if twolastDigits.isdigit():
         last_digit = twolastDigits
 
+
+
     files = sorted(os.listdir(destination_directory), reverse=False)
     if last_digit == twolastDigits:
         filtered_files = [file for file in files if file.startswith(filename_without_extension[:-2])]
@@ -137,10 +139,9 @@ def CheckForSurpassedAndMoveDocument(file_name):
             if os.path.exists(surpassed_path):
                 shutil.move(surpassed_path, surpassed_destination_path)
 
-
-
 def CopyAllItemsToDestination(sourse):
     for file_name in os.listdir(sourse):
+        print("file copied")
         # Construct the full paths for the source
         filepath = os.path.join(sourse, file_name)
 
@@ -150,8 +151,39 @@ def CopyAllItemsToDestination(sourse):
         elif os.path.isdir(filepath):
             CopyAllItemsToDestination(filepath)
 
+def CopyAllItemsToDestinationScreen():
+    # Open the loading screen
+    loading_screen = root
 
-CopyAllItemsToDestination(source_directory)
+    # Simulate the code execution
+    CopyAllItemsToDestination(source_directory)
+
+    # Close the loading screen
+    loading_screen.destroy()
+
+# Create the main window
+root = tk.Tk()
+root.title("Loading")
+
+label = tk.Label(root, text="Copiando arquivos...")
+label.pack(padx=20, pady=20)
+
+window_width = 600
+window_height = 400
+root.geometry(f"{window_width}x{window_height}")
+
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+x_position = (screen_width - window_width) // 2
+y_position = (screen_height - window_height) // 2
+
+# Set the window position
+root.geometry(f"+{x_position}+{y_position}")
+
+root.after(100, CopyAllItemsToDestinationScreen)
+# Run the application
+root.mainloop()
+
 
 for file_name in sorted(os.listdir(destination_directory), reverse=False):
     file_path = os.path.join(destination_directory, file_name)
