@@ -121,8 +121,11 @@ def CheckForSurpassedAndMoveDocument(file_name):
     for file in filtered_files:
         newfilename_without_extension, newfile_extension = os.path.splitext(file)
         newlastdigit = newfilename_without_extension[-1]
-        newthreelastDigits = filename_without_extension[-2] + twolastDigits
-        newtwolastDigits = newfilename_without_extension[-2] + newfilename_without_extension[-1]
+        newtwolastDigits = newfilename_without_extension[-2] + newlastdigit
+        newthreelastDigits = filename_without_extension[-2] + newtwolastDigits
+
+        if newtwolastDigits.isdigit():
+            newlastdigit = newtwolastDigits
 
         irregular = False
 
@@ -136,29 +139,47 @@ def CheckForSurpassedAndMoveDocument(file_name):
         if newtwolastDigits.isdigit() and not newthreelastDigits.isalnum():
             irregular = True
 
-        if newtwolastDigits.isdigit():
-            newlastdigit = newtwolastDigits
 
-        if file_extension == newfile_extension and filename_without_extension != newfilename_without_extension and not irregular:
+
+        #print(filtered_files)
+        #print(file_extension + " : "+ newfile_extension)
+
+        #print(filename_without_extension + " : "+ newfilename_without_extension)
+
+        #print(irregular)
+
+        print(last_digit + " : " + newlastdigit)
+        print(irregular)
+
+        if (file_extension == newfile_extension
+                and filename_without_extension != newfilename_without_extension
+                and not irregular):
+            print("a")
             if newlastdigit.isdigit() and last_digit.isdigit() and int(newlastdigit) < int(last_digit):
                 surpassed_path = os.path.join(destination_directory, file)
                 surpassed_destination_path = os.path.join(surpassed_directory, file)
+                print("b")
             elif not newlastdigit.isdigit() and not last_digit.isdigit():
                 if newlastdigit < last_digit:
                     surpassed_path = os.path.join(destination_directory, file)
                     surpassed_destination_path = os.path.join(surpassed_directory, file)
+                    print("c")
                 else:
                     surpassed_path = os.path.join(destination_directory, file_name)
                     surpassed_destination_path = os.path.join(surpassed_directory, file_name)
+                    print("d")
             else:
                 #manda o numerado para outra pasta
                 if not newlastdigit.isdigit() and last_digit.isdigit():
                     surpassed_path = os.path.join(destination_directory, file)
                     surpassed_destination_path = os.path.join(surpassed_directory, file)
+                    print("f")
                 else:
                     surpassed_path = os.path.join(destination_directory, file_name)
                     surpassed_destination_path = os.path.join(surpassed_directory, file_name)
+                    print("g")
             if os.path.exists(surpassed_path):
+
                 shutil.move(surpassed_path, surpassed_destination_path)
 
 def CopyAllItemsToDestination(sourse):
@@ -244,9 +265,9 @@ root.mainloop()
 
 
 
-if os.path.exists(destination_directory):
-    print(destination_directory)
-    if os.name == 'nt':  # For Windows
-        subprocess.Popen(['explorer', os.path.normpath(destination_directory)])
-    elif os.name == 'posix':  # For macOS and Linux
-        subprocess.Popen(['xdg-open', os.path.normpath(destination_directory)])
+#if os.path.exists(destination_directory):
+   # print(destination_directory)
+    #if os.name == 'nt':  # For Windows
+        #subprocess.Popen(['explorer', os.path.normpath(destination_directory)])
+    #elif os.name == 'posix':  # For macOS and Linux
+        #subprocess.Popen(['xdg-open', os.path.normpath(destination_directory)])
