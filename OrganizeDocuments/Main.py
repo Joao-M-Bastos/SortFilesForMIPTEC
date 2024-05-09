@@ -5,15 +5,6 @@ import tkinter as tk
 from tkinter import filedialog
 import sys
 
-#folder_path = input("Onde estão os arquivos? ")
-
-# Check if the entered path is a valid directory
-#if os.path.isdir(folder_path) is False:
-    #print(f"O caminho '{folder_path}' não é um diretorio valido.")
-#else:
-    #source_directory = folder_path
-
-
 source_directory = 'C:/Documentos Para Organizar Miptec'
 destination_directory = 'C:/Documentos Organizados Miptec/'
 
@@ -161,11 +152,25 @@ def CopyAllItemsToDestinationScreen():
     # Close the loading screen
     loading_screen.destroy()
 
+def OrganizeItemsToDestinationScreen():
+    # Open the loading screen
+    loading_screen = root
+
+    # Simulate the code execution
+    for file_name in sorted(os.listdir(destination_directory), reverse=False):
+        file_path = os.path.join(destination_directory, file_name)
+        print(file_name)
+        if os.path.isfile(file_path):
+            CheckForSurpassedAndMoveDocument(file_name)
+
+    # Close the loading screen
+    loading_screen.destroy()
+
 # Create the main window
 root = tk.Tk()
-root.title("Loading")
+root.title("Aguarde")
 
-label = tk.Label(root, text="Copiando arquivos...")
+label = tk.Label(root, text="Aguarde... Copiando arquivos...")
 label.pack(padx=20, pady=20)
 
 window_width = 600
@@ -184,9 +189,26 @@ root.after(100, CopyAllItemsToDestinationScreen)
 # Run the application
 root.mainloop()
 
+root = tk.Tk()
+root.title("Aguarde")
 
-for file_name in sorted(os.listdir(destination_directory), reverse=False):
-    file_path = os.path.join(destination_directory, file_name)
-    print(file_name)
-    if os.path.isfile(file_path):
-        CheckForSurpassedAndMoveDocument(file_name)
+label = tk.Label(root, text="Aguarde um pouco mais... Organizado arquivos...")
+label.pack(padx=20, pady=20)
+
+window_width = 600
+window_height = 400
+root.geometry(f"{window_width}x{window_height}")
+
+screen_width = root.winfo_screenwidth()
+screen_height = root.winfo_screenheight()
+x_position = (screen_width - window_width) // 2
+y_position = (screen_height - window_height) // 2
+
+# Set the window position
+root.geometry(f"+{x_position}+{y_position}")
+
+root.after(100, OrganizeItemsToDestinationScreen)
+# Run the application
+root.mainloop()
+
+
