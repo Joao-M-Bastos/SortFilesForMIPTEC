@@ -91,12 +91,13 @@ def CheckForSurpassedAndMoveDocument(file_name):
     filename_without_extension, file_extension = os.path.splitext(file_name)
     last_digit = filename_without_extension[-1]
     twolastDigits = filename_without_extension[-2] + last_digit
-    threelastDigits = filename_without_extension[-2] + twolastDigits
+    threelastDigits = filename_without_extension[-3] + twolastDigits
+    digit = last_digit
 
     irregular = False
 
     if twolastDigits.isdigit():
-        last_digit = twolastDigits
+        digit = twolastDigits
     #Documento com texto apos o nome
     if threelastDigits.isalpha():
         irregular = True
@@ -108,12 +109,12 @@ def CheckForSurpassedAndMoveDocument(file_name):
         irregular = True
 
     files = sorted(os.listdir(destination_directory), reverse=False)
-    if not irregular:
+    if irregular:
         disordered_path = os.path.join(destination_directory, file_name)
         disordered_destination_path = os.path.join(disordered_directory, file_name)
         shutil.move(disordered_path, disordered_destination_path)
         filtered_files = []
-    elif last_digit == twolastDigits:
+    elif digit == twolastDigits:
         filtered_files = [file for file in files if file.startswith(filename_without_extension[:-2])]
     else:
         filtered_files = [file for file in files if file.startswith(filename_without_extension[:-1])]
@@ -122,10 +123,12 @@ def CheckForSurpassedAndMoveDocument(file_name):
         newfilename_without_extension, newfile_extension = os.path.splitext(file)
         newlastdigit = newfilename_without_extension[-1]
         newtwolastDigits = newfilename_without_extension[-2] + newlastdigit
-        newthreelastDigits = filename_without_extension[-2] + newtwolastDigits
+        newthreelastDigits = filename_without_extension[-3] + newtwolastDigits
+
+        newDigit = newlastdigit
 
         if newtwolastDigits.isdigit():
-            newlastdigit = newtwolastDigits
+            newDigit = newtwolastDigits
 
         irregular = False
 
@@ -148,19 +151,19 @@ def CheckForSurpassedAndMoveDocument(file_name):
 
         #print(irregular)
 
-        print(last_digit + " : " + newlastdigit)
-        print(irregular)
+        print(digit + " : " + newDigit)
+        #print(irregular)
 
         if (file_extension == newfile_extension
                 and filename_without_extension != newfilename_without_extension
                 and not irregular):
             print("a")
-            if newlastdigit.isdigit() and last_digit.isdigit() and int(newlastdigit) < int(last_digit):
+            if newDigit.isdigit() and digit.isdigit() and int(newDigit) < int(digit):
                 surpassed_path = os.path.join(destination_directory, file)
                 surpassed_destination_path = os.path.join(surpassed_directory, file)
                 print("b")
-            elif not newlastdigit.isdigit() and not last_digit.isdigit():
-                if newlastdigit < last_digit:
+            elif not newDigit.isdigit() and not digit.isdigit():
+                if newDigit < digit:
                     surpassed_path = os.path.join(destination_directory, file)
                     surpassed_destination_path = os.path.join(surpassed_directory, file)
                     print("c")
@@ -170,7 +173,7 @@ def CheckForSurpassedAndMoveDocument(file_name):
                     print("d")
             else:
                 #manda o numerado para outra pasta
-                if not newlastdigit.isdigit() and last_digit.isdigit():
+                if not newDigit.isdigit() and digit.isdigit():
                     surpassed_path = os.path.join(destination_directory, file)
                     surpassed_destination_path = os.path.join(surpassed_directory, file)
                     print("f")
