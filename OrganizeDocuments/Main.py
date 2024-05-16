@@ -157,30 +157,24 @@ def CheckForSurpassedAndMoveDocument(file_name):
         if (file_extension == newfile_extension
                 and filename_without_extension != newfilename_without_extension
                 and not irregular):
-            print("a")
             if newDigit.isdigit() and digit.isdigit() and int(newDigit) < int(digit):
                 surpassed_path = os.path.join(destination_directory, file)
                 surpassed_destination_path = os.path.join(surpassed_directory, file)
-                print("b")
             elif not newDigit.isdigit() and not digit.isdigit():
                 if newDigit < digit:
                     surpassed_path = os.path.join(destination_directory, file)
                     surpassed_destination_path = os.path.join(surpassed_directory, file)
-                    print("c")
                 else:
                     surpassed_path = os.path.join(destination_directory, file_name)
                     surpassed_destination_path = os.path.join(surpassed_directory, file_name)
-                    print("d")
             else:
                 #manda o numerado para outra pasta
                 if not newDigit.isdigit() and digit.isdigit():
                     surpassed_path = os.path.join(destination_directory, file)
                     surpassed_destination_path = os.path.join(surpassed_directory, file)
-                    print("f")
                 else:
                     surpassed_path = os.path.join(destination_directory, file_name)
                     surpassed_destination_path = os.path.join(surpassed_directory, file_name)
-                    print("g")
             if os.path.exists(surpassed_path):
 
                 shutil.move(surpassed_path, surpassed_destination_path)
@@ -268,9 +262,9 @@ root.mainloop()
 
 
 
-#if os.path.exists(destination_directory):
-   # print(destination_directory)
-    #if os.name == 'nt':  # For Windows
-        #subprocess.Popen(['explorer', os.path.normpath(destination_directory)])
-    #elif os.name == 'posix':  # For macOS and Linux
-        #subprocess.Popen(['xdg-open', os.path.normpath(destination_directory)])
+if os.path.exists(destination_directory):
+    print(destination_directory)
+    if os.name == 'nt':  # For Windows
+        subprocess.Popen(['explorer', os.path.normpath(destination_directory)])
+    elif os.name == 'posix':  # For macOS and Linux
+        subprocess.Popen(['xdg-open', os.path.normpath(destination_directory)])
