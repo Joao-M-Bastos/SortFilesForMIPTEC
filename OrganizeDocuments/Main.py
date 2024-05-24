@@ -8,6 +8,7 @@ import subprocess
 source_directory = 'C:/Documentos Para Organizar Miptec'
 destination_directory = 'C:/Documentos Organizados Miptec/'
 
+
 def select_folder():
     global source_directory
 
@@ -40,8 +41,9 @@ root.geometry(f"+{x_position}+{y_position}")
 
 root.mainloop()
 
-if(os.path.isdir(source_directory) is False):
+if (os.path.isdir(source_directory) is False):
     sys.exit()
+
 
 def select_destination_folder():
     global destination_directory
@@ -52,6 +54,7 @@ def select_destination_folder():
         root.destroy()
     else:
         label.config(text="Nenhuma pasta selecionada.")
+
 
 root = tk.Tk()
 root.title("Selecione a pasta para onde irão os documentos")
@@ -74,10 +77,10 @@ root.geometry(f"+{x_position}+{y_position}")
 
 root.mainloop()
 
-if(os.path.isdir(destination_directory) is False):
+if (os.path.isdir(destination_directory) is False):
     sys.exit()
-# Specify the path of the folder you want to create
 
+# Specify the path of the folder you want to create
 destination_directory = destination_directory + '/Documentos Organizados'
 surpassed_directory = destination_directory + '/Superados'
 disordered_directory = destination_directory + '/Desordenado'
@@ -87,12 +90,14 @@ os.makedirs(destination_directory, exist_ok=True)
 os.makedirs(surpassed_directory, exist_ok=True)
 os.makedirs(disordered_directory, exist_ok=True)
 
+
 def CheckForSurpassedAndMoveDocument(file_name):
     filename_without_extension, file_extension = os.path.splitext(file_name)
     last_digit = filename_without_extension[-1]
     twolastDigits = filename_without_extension[-2] + last_digit
     threelastDigits = filename_without_extension[-3] + twolastDigits
     digit = last_digit
+
 
     irregular = False
 
@@ -142,8 +147,6 @@ def CheckForSurpassedAndMoveDocument(file_name):
         if newtwolastDigits.isdigit() and not newthreelastDigits.isalnum():
             irregular = True
 
-
-
         #print(filtered_files)
         #print(file_extension + " : "+ newfile_extension)
 
@@ -176,8 +179,8 @@ def CheckForSurpassedAndMoveDocument(file_name):
                     surpassed_path = os.path.join(destination_directory, file_name)
                     surpassed_destination_path = os.path.join(surpassed_directory, file_name)
             if os.path.exists(surpassed_path):
-
                 shutil.move(surpassed_path, surpassed_destination_path)
+
 
 def CopyAllItemsToDestination(sourse):
     for file_name in os.listdir(sourse):
@@ -191,6 +194,7 @@ def CopyAllItemsToDestination(sourse):
         elif os.path.isdir(filepath):
             CopyAllItemsToDestination(filepath)
 
+
 def CopyAllItemsToDestinationScreen():
     # Open the loading screen
     loading_screen = root
@@ -200,6 +204,7 @@ def CopyAllItemsToDestinationScreen():
 
     # Close the loading screen
     loading_screen.destroy()
+
 
 def OrganizeItemsToDestinationScreen():
     # Open the loading screen
@@ -215,7 +220,25 @@ def OrganizeItemsToDestinationScreen():
     # Close the loading screen
     loading_screen.destroy()
 
+
+def update_Copy_Label():
+    global current_step
+    loading_steps = ["Aguarde... Copiando arquivos.", "Aguarde... Copiando arquivos..",
+                     "Aguarde... Copiando arquivos..."]
+
+    # Atualiza o texto do label
+    label.config(text=loading_steps[current_step])
+
+    # Atualiza o passo atual
+    current_step = (current_step + 1) % len(loading_steps)
+
+    # Agenda a próxima chamada desta função
+    root.after(500, update_Copy_Label)
+
+
 # Create the main window
+current_step = 0
+
 root = tk.Tk()
 root.title("Aguarde")
 
@@ -234,9 +257,28 @@ y_position = (screen_height - window_height) // 2
 # Set the window position
 root.geometry(f"+{x_position}+{y_position}")
 
+root.after(500, update_Copy_Label)
+
 root.after(100, CopyAllItemsToDestinationScreen)
+
 # Run the application
 root.mainloop()
+
+
+def update_Organize_Label():
+    global current_step
+    loading_steps = ["Aguarde um pouco mais... Organizado arquivos.", "Aguarde um pouco mais... Organizado arquivos..",
+                     "Aguarde um pouco mais... Organizado arquivos..."]
+
+    # Atualiza o texto do label
+    label.config(text=loading_steps[current_step])
+
+    # Atualiza o passo atual
+    current_step = (current_step + 1) % len(loading_steps)
+
+    # Agenda a próxima chamada desta função
+    root.after(500, update_Organize_Label)
+
 
 root = tk.Tk()
 root.title("Aguarde")
@@ -257,10 +299,9 @@ y_position = (screen_height - window_height) // 2
 root.geometry(f"+{x_position}+{y_position}")
 
 root.after(100, OrganizeItemsToDestinationScreen)
+root.after(500, update_Organize_Label)
 # Run the application
 root.mainloop()
-
-
 
 if os.path.exists(destination_directory):
     print(destination_directory)
